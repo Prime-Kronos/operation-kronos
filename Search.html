@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SUPERS SEARCH : PRIME OPERATION</title>
+  <style>
+    body {
+      background: #ffffff;
+      color: #000000;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: crosshair;
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #000;
+      color: #000;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      width: 260px;
+      outline: none;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .log {
+      margin-top: 25px;
+      white-space: pre-line;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .card {
+      margin-top: 20px;
+      border-top: 1px solid #000;
+      padding-top: 10px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    .found {
+      color: green;
+    }
+
+    .notfound {
+      color: red;
+    }
+
+    .light {
+      color: red;
+      font-weight: bold;
+    }
+
+    .back {
+      position: fixed;
+      bottom: 10px;
+      right: 15px;
+      font-size: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div>SUPERS DATABASE : SEARCH SYSTEM ONLINE</div>
+    <div>ENTER SUPER NAME:</div>
+    <input type="text" id="searchInput" autofocus>
+    <div id="log" class="log"></div>
+    <div id="card" class="card"></div>
+  </div>
+  <div class="back" onclick="goBack()">[ BACK TO MENU ]</div>
+
+  <script>
+    const input = document.getElementById('searchInput');
+    const log = document.getElementById('log');
+    const card = document.getElementById('card');
+
+    const supers = {
+      "MR INCREDIBLE": { real:"BOB PARR", power:"SUPER STRENGTH", location:"METROVILLE", status:"ACTIVE", threat:"LEVEL 8 / HIGH" },
+      "ELASTIGIRL": { real:"HELEN PARR", power:"ELASTIC BODY", location:"METROVILLE", status:"ACTIVE", threat:"LEVEL 7 / HIGH" },
+      "DASH": { real:"DASHIEL PARR", power:"SUPER SPEED", location:"METROVILLE", status:"ACTIVE", threat:"LEVEL 5 / MODERATE" },
+      "VIOLET": { real:"VIOLET PARR", power:"FORCE FIELDS / INVISIBILITY", location:"METROVILLE", status:"ACTIVE", threat:"LEVEL 6 / HIGH" },
+      "JACK-JACK": { real:"JACK-JACK PARR", power:"MULTI-POWERED INFANT", location:"METROVILLE", status:"ACTIVE", threat:"LEVEL 9 / UNKNOWN" },
+      "FROZONE": { real:"LUCIUS BEST", power:"ICE MANIPULATION", location:"METROVILLE", status:"ACTIVE", threat:"LEVEL 6 / MODERATE" },
+      "VOYD": { real:"KAREN", power:"PORTAL GENERATION", location:"NEW MUNICEBERG", status:"ACTIVE", threat:"LEVEL 7 / HIGH" },
+
+      "GAZEERBEAM": { real:"SIMON J. PALE", power:"LASER EYES", location:"DECEASED", status:"TERMINATED — DIED BY OMNIDROID", threat:"N/A" },
+      "STRATOGALE": { real:"UNKNOWN", power:"FLIGHT / SUPER STRENGTH", location:"DECEASED", status:"TERMINATED — DIED BY OMNIDROID", threat:"N/A" },
+      "MACROBURST": { real:"UNKNOWN", power:"WIND PRESSURE CONTROL", location:"DECEASED", status:"TERMINATED — DIED BY OMNIDROID", threat:"N/A" },
+      "BLITZERMAN": { real:"UNKNOWN", power:"ELECTRIC SPEED", location:"DECEASED", status:"TERMINATED — DIED BY OMNIDROID", threat:"N/A" },
+      "PHALANX": { real:"UNKNOWN", power:"DEFENSIVE ENERGY SHIELD", location:"DECEASED", status:"TERMINATED — DIED BY OMNIDROID", threat:"N/A" },
+      "APOGEE": { real:"UNKNOWN", power:"GRAVITY CONTROL", location:"DECEASED", status:"TERMINATED — DIED BY OMNIDROID", threat:"N/A" },
+      "EVERSEAR": { real:"UNKNOWN", power:"HEAT GENERATION", location:"DECEASED", status:"TERMINATED — DIED BY OMNIDROID", threat:"N/A" },
+      "PSYCHWAVE": { real:"UNKNOWN", power:"TELEKINETIC FORCE", location:"DECEASED", status:"TERMINATED — DIED BY OMNIDROID", threat:"N/A" },
+      "THUNDERHEAD": { real:"UNKNOWN", power:"ELECTRIC STRENGTH", location:"DECEASED", status:"TERMINATED — DIED BY OMNIDROID", threat:"N/A" },
+      "DOWNBURST": { real:"UNKNOWN", power:"AIR IMPACT", location:"DECEASED", status:"TERMINATED — DIED BY OMNIDROID", threat:"N/A" },
+      "FIRELINE": { real:"UNKNOWN", power:"FIRE CONTROL", location:"DECEASED", status:"TERMINATED — DIED BY OMNIDROID", threat:"N/A" },
+      "METEORITAGIRL": { real:"UNKNOWN", power:"METEOR MANIPULATION", location:"DECEASED", status:"TERMINATED — DIED BY OMNIDROID", threat:"N/A" },
+      "SCREECH": { real:"UNKNOWN", power:"SONIC SCREAM", location:"DECEASED", status:"TERMINATED — DIED BY OMNIDROID", threat:"N/A" }
+    };
+
+    function playBeep() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = 440;
+      gain.gain.value = 0.05;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      setTimeout(() => osc.stop(), 100);
+    }
+
+    function showLog(lines, callback) {
+      log.style.opacity = 1;
+      log.textContent = "";
+      let i = 0;
+      function next() {
+        if (i < lines.length) {
+          log.textContent += lines[i] + "\n";
+          playBeep();
+          i++;
+          setTimeout(next, 600);
+        } else callback();
+      }
+      next();
+    }
+
+    input.addEventListener('keypress', e => {
+      if (e.key === 'Enter') {
+        const name = input.value.toUpperCase().trim();
+        log.textContent = "";
+        card.style.opacity = 0;
+        const hero = supers[name];
+        playBeep();
+
+        showLog(["ACCESSING DATABASE...", "SEARCHING RECORDS..."], () => {
+          if (hero) {
+            showLog(["MATCH FOUND : " + name], () => {
+              const loc = hero.location === "DECEASED" || hero.location === "UNKNOWN"
+                ? `<span class='light'>LOCATION: UNKNOWN</span>`
+                : `<span class='light'>LOCATION: KNOWN</span>`;
+
+              card.innerHTML = `
+                NAME: ${name}<br>
+                REAL IDENTITY: ${hero.real}<br>
+                POWER: ${hero.power}<br>
+                ${loc}<br>
+                STATUS: ${hero.status}<br>
+                THREAT LEVEL: ${hero.threat}
+              `;
+              card.style.opacity = 1;
+              playBeep();
+            });
+          } else {
+            showLog(["NO MATCH FOUND"], () => {
+              card.innerHTML = `<span class="notfound">NO DATA AVAILABLE</span>`;
+              card.style.opacity = 1;
+            });
+          }
+        });
+      }
+    });
+
+    function goBack() {
+      playBeep();
+      setTimeout(() => window.location.href = "supers.html", 300);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SUPERS TERMINATED : PRIME OPERATION</title>
+  <style>
+    body {
+      background: #fff;
+      color: #000;
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      margin: 0;
+      padding: 40px;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    .record {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 6px;
+    }
+
+    .terminated {
+      color: red;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .back {
+      position: fixed;
+      bottom: 10px;
+      right: 15px;
+      font-size: 10px;
+      cursor: pointer;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <h3>SUPERS DATABASE : TERMINATED FILES</h3>
+  <div id="records"></div>
+  <div class="back" onclick="goBack()">[ BACK TO MENU ]</div>
+
+  <script>
+    const records = document.getElementById('records');
+    const data = [
+      { name: "GAZEERBEAM", status: "TERMINATED" },
+      { name: "STRATOGALE", status: "TERMINATED" },
+      { name: "MACROBURST", status: "TERMINATED" },
+      { name: "BLITZERMAN", status: "TERMINATED" },
+      { name: "PHALANX", status: "TERMINATED" },
+      { name: "APOGEE", status: "TERMINATED" },
+      { name: "EVERSEAR", status: "TERMINATED" },
+      { name: "PSYCHWAVE", status: "TERMINATED" },
+      { name: "VOYD", status: "UNKNOWN" }
+    ];
+
+    let i = 0;
+
+    function playBeep() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = 440;
+      gain.gain.value = 0.05;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      setTimeout(() => osc.stop(), 100);
+    }
+
+    function showRecord() {
+      if (i >= data.length) return;
+      const div = document.createElement('div');
+      div.className = 'record';
+      div.innerHTML = `${data[i].name} — <span class="${data[i].status === 'TERMINATED' ? 'terminated' : ''}">${data[i].status}</span>`;
+      records.appendChild(div);
+      playBeep();
+      setTimeout(() => { div.style.opacity = 1; i++; showRecord(); }, 500);
+    }
+
+    function goBack() {
+      playBeep();
+      setTimeout(() => window.location.href = "supers.html", 300);
+    }
+
+    showRecord();
+  </script>
+</body>
+</html>

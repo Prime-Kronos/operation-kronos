@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SUPERS DATABASE : PRIME OPERATION</title>
+  <style>
+    body {
+      background-color: #ffffff;
+      color: #000000;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      cursor: crosshair;
+    }
+
+    .line {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      margin: 6px 0;
+      letter-spacing: 2px;
+    }
+
+    .flash {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="terminal"></div>
+  <div class="flash" id="flash"></div>
+
+  <script>
+    const terminal = document.getElementById('terminal');
+    const flash = document.getElementById('flash');
+
+    const lines = [
+      "SUPERS DATABASE : PRIME OPERATION",
+      "",
+      "SUPERS TERMINATED",
+      "SUPERS SEARCH"
+    ];
+
+    let i = 0;
+
+    // функция для генерации звука
+    function playBeep() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = 440; // частота “бип”
+      gain.gain.value = 0.05;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      setTimeout(() => osc.stop(), 100);
+    }
+
+    function printLine() {
+      if (i >= lines.length) return;
+      const line = document.createElement('div');
+      line.className = 'line';
+      line.textContent = "";
+      terminal.appendChild(line);
+      let j = 0;
+
+      function typeChar() {
+        if (j < lines[i].length) {
+          line.textContent += lines[i][j];
+          j++;
+          setTimeout(typeChar, 35);
+        } else {
+          line.style.opacity = 1;
+          if (lines[i].trim() !== "") playBeep();
+          i++;
+          setTimeout(printLine, 400);
+        }
+      }
+      typeChar();
+    }
+
+    printLine();
+
+    // Переход при клике
+    document.addEventListener('click', (e) => {
+      const text = e.target.textContent.trim();
+      if (text === "SUPERS TERMINATED") {
+        transitionTo("terminated.html");
+      } else if (text === "SUPERS SEARCH") {
+        transitionTo("search.html");
+      }
+    });
+
+    function transitionTo(url) {
+      playBeep();
+      flash.style.opacity = 1;
+      setTimeout(() => {
+        window.location.href = url;
+      }, 400);
+    }
+  </script>
+</body>
+</html>

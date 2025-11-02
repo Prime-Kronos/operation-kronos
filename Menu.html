@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prime Terminal</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: #ffffff;
+    color: #000000;
+    font-family: "Courier New", monospace;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    cursor: url('https://cur.cursors-4u.net/cursors/cur-2/cur110.cur'), auto;
+  }
+
+  .menu {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    text-align: center;
+  }
+
+  .item {
+    font-size: 18px;
+    letter-spacing: 2px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease, color 0.3s;
+  }
+
+  .visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .item:hover {
+    color: #ff0000;
+  }
+
+  footer {
+    position: absolute;
+    bottom: 20px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    opacity: 0.5;
+  }
+
+  @keyframes fadeout {
+    to { opacity: 0; background: #fff; }
+  }
+</style>
+</head>
+<body>
+  <div class="menu" id="menu">
+    <div class="item" data-link="island.html">ISLAND OPERATIONS</div>
+    <div class="item" data-link="omnidroid.html">OMNIDROID PROGRAM</div>
+    <div class="item" data-link="finances.html">FINANCES</div>
+    <div class="item" data-link="supers.html">SUPERS</div>
+  </div>
+  <footer>Prime® Secure Access v2.3</footer>
+
+  <audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+
+<script>
+const items = document.querySelectorAll(".item");
+const beep = document.getElementById("beep");
+
+// появление пунктов по одному (сверху вниз)
+items.forEach((el, i) => {
+  setTimeout(() => {
+    el.classList.add("visible");
+    beep.currentTime = 0;
+    beep.play();
+  }, 1000 * i);
+});
+
+// выбор пункта
+items.forEach(el => {
+  el.addEventListener("click", () => {
+    beep.currentTime = 0;
+    beep.play();
+    document.body.style.animation = "fadeout 1.2s forwards";
+    setTimeout(() => window.location.href = el.dataset.link, 1200);
+  });
+});
+</script>
+</body>
+</html>

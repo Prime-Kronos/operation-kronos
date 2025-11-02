@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prime Access Terminal</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: #fff;
+    color: #000;
+    font-family: "Arial Black", Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  h1 {
+    font-size: 46px;
+    letter-spacing: 3px;
+    font-weight: 900;
+    margin: 0 0 60px 0;
+  }
+
+  input {
+    border: none;
+    border-bottom: 3px solid #000;
+    background: transparent;
+    font-size: 22px;
+    text-align: center;
+    outline: none;
+    letter-spacing: 2px;
+    width: 280px;
+    transition: border-color 0.3s;
+  }
+
+  input:focus {
+    border-color: #555;
+  }
+
+  .message {
+    margin-top: 60px;
+    font-size: 26px;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.5s, color 0.3s;
+  }
+
+  .show {
+    opacity: 1;
+  }
+
+  .flash {
+    animation: flash 0.1s alternate 6;
+  }
+
+  @keyframes flash {
+    from { background: #fff; }
+    to { background: #f00; }
+  }
+
+  .fadeout {
+    animation: fadeout 1.5s forwards;
+  }
+
+  @keyframes fadeout {
+    to { opacity: 0; background: #fff; }
+  }
+</style>
+</head>
+<body>
+  <h1>Prime ®</h1>
+  <input type="password" id="pass" placeholder="ENTER PASSWORD">
+  <div class="message" id="msg"></div>
+
+  <!-- Системные звуки -->
+  <audio id="ok" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+  <audio id="err" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+
+<script>
+const input = document.getElementById("pass");
+const msg = document.getElementById("msg");
+const ok = document.getElementById("ok");
+const err = document.getElementById("err");
+
+input.addEventListener("keydown", e => {
+  if (e.key === "Enter") checkPass();
+});
+
+function checkPass() {
+  const val = input.value.trim().toUpperCase();
+  if (val === "KRONOS") {
+    ok.play();
+    msg.textContent = "ACCESS GRANTED";
+    msg.style.color = "#0a0";
+    msg.classList.add("show");
+    setTimeout(() => {
+      document.body.classList.add("fadeout");
+      setTimeout(() => window.location.href = "kronos_stage2.html", 1500);
+    }, 1500);
+  } else {
+    err.play();
+    msg.textContent = "ACCESS DENIED";
+    msg.style.color = "#f00";
+    msg.classList.add("show");
+    document.body.classList.add("flash");
+    setTimeout(() => document.body.classList.remove("flash"), 800);
+  }
+}
+</script>
+</body>
+</html>
